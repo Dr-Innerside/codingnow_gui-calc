@@ -1,15 +1,69 @@
 import tkinter as tk
 
-disValue = 0                                                                            # 초기값을 0으로 변수 초기화
+# 보여주는 변수
+# 초기값을 0으로 변수 초기화
+disValue = 0
+# 연산자를 정수화
+operator = {'+': 1, '-': 2, '/': 3, '*': 4, 'C': 5, '=': 6}
+# 연산 값 변수
+stoValue = 0
+# 이전 연산자
+opPre = 0
+
 
 def number_click(value):
-    print('숫자',value)
+    # print('숫자', value)
     global disValue
-    disValue = (disValue*10) + value
+    disValue = (disValue * 10) + value
     str_value.set(disValue)
 
+
 def operator_click(value):
-    print('명령', value)
+    # print('명령', value)
+    global disValue, operator, stoValue, opPre
+    # 누른 버튼을 정수화
+    op = operator[value]
+    if op == 5:  # C
+        clear()
+    # 아무것도 누르지 않은 경우,
+    elif disValue == 0:
+        # 이전 명령을 초기화
+        opPre = 0
+    # 연산자를 누른 뒤, 피연산자 입력칸을 위한 초기화
+    elif opPre == 0:
+        opPre = op         # 이전 연산자 백업
+        stoValue = disValue
+        disValue = 0
+        str_value.set(disValue)
+    # 연산 파트
+    elif op == 6:  # '='
+        # 더하기 연산
+        if opPre == 1:
+            disValue = stoValue + disValue
+        if opPre == 2:
+            disValue = stoValue - disValue
+        if opPre == 3:
+            disValue = stoValue / disValue
+        if opPre == 4:
+            disValue = stoValue * disValue
+
+        str_value.set(disValue)
+        disValue=0
+        stoValue=0
+        opPre = op
+    else:
+        clear()
+
+
+
+def clear():
+    global disValue, operator, stoValue, opPre
+    disValue = 0
+    stoValue = 0
+    opPre = 0
+    str_value.set(disValue)
+
+
 def button_click(value):
     # print(value)
 
@@ -21,24 +75,23 @@ def button_click(value):
         operator_click(value)
 
 
-
 win = tk.Tk()
 win.title('계산기')
 
-str_value = tk.StringVar()                                                              # 문자열로 표시
-str_value.set(str(disValue))                                                            # 초깃값을 문자열로 변환
-dis = tk.Entry(win, textvariable=str_value, justify="right", bg='white', fg='red')        # 에디터 엔트리 형식에 넣기
-dis.grid(column=0, row=0, columnspan= 4, ipadx=80, ipady=30)                            # 에디터 위치, 크기 조정
+str_value = tk.StringVar()  # 문자열로 표시
+str_value.set(str(disValue))  # 초깃값을 문자열로 변환
+dis = tk.Entry(win, textvariable=str_value, justify="right", bg='white', fg='red')  # 에디터 엔트리 형식에 넣기
+dis.grid(column=0, row=0, columnspan=4, ipadx=80, ipady=30)  # 에디터 위치, 크기 조정
 
 # 버튼을 반복문 형태로 만들기
 # 버튼에 들어갈 배열 선언
-calItem = [['1','2','3','4'],
-           ['5','6','7','8'],
-           ['9','0','+','-'],
-           ['/','*','C','=']]
+calItem = [['1', '2', '3', '4'],
+           ['5', '6', '7', '8'],
+           ['9', '0', '+', '-'],
+           ['/', '*', 'C', '=']]
 # 버튼을 만들어줄 반복문 선언
 # calItem의 인덱스(리스트의 번호)가 i에, 리스트 내용이 item에 들어감
-for i,items in enumerate(calItem):
+for i, items in enumerate(calItem):
     # 네 개로 묶인 item을 각각 인덱스(k)와 하나의 버튼 값(item)으로 들어감
     for k, item in enumerate(items):
         # 초기에 만든 버튼에서 들어갈 버튼의 이름(text)에 item 값이,
@@ -53,7 +106,6 @@ for i,items in enumerate(calItem):
         except:
             color = 'green'
 
-
         bt = tk.Button(win,
                        text=item,
                        width=10,
@@ -63,8 +115,7 @@ for i,items in enumerate(calItem):
                        # 간이 함수 생성, cmd에 item 값을 넣고 버튼클릭 함수에 인자를 넣어 실행
                        command=lambda cmd=item: button_click(cmd))
 
-        bt.grid(column=k, row=(i+1))
-
+        bt.grid(column=k, row=(i + 1))
 
 # tk.Button(win, text='1', width=10, height=5).grid(column=0, row=1)
 # tk.Button(win, text='2', width=10, height=5).grid(column=1, row=1)
@@ -85,7 +136,6 @@ for i,items in enumerate(calItem):
 # tk.Button(win, text='*', width=10, height=5).grid(column=1, row=4)
 # tk.Button(win, text='C', width=10, height=5).grid(column=2, row=4)
 # tk.Button(win, text='=', width=10, height=5).grid(column=3, row=4)
-
 
 
 win.mainloop()
