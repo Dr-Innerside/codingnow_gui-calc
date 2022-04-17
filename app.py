@@ -1,10 +1,29 @@
 import tkinter as tk
 
+disValue = 0                                                                            # 초기값을 0으로 변수 초기화
+
+def number_click(value):
+    print('숫자',value)
+
+def operator_click(value):
+    print('명령', value)
+
+
+def button_click(value):
+    print(value)
+
+    # 숫자와 오퍼레이터를 나누기 위한
+    try:
+        value = int(value)
+        number_click(value)
+    except:
+        operator_click(value)
+
+
 
 win = tk.Tk()
 win.title('계산기')
 
-disValue = 0                                                                            # 초기값을 0으로 변수 초기화
 str_value = tk.StringVar()                                                              # 문자열로 표시
 str_value.set(str(disValue))                                                            # 초깃값을 문자열로 변환
 dis = tk.Entry(win, textvariable=str_value, justify="right", bg='white', fg='red')        # 에디터 엔트리 형식에 넣기
@@ -14,7 +33,7 @@ dis.grid(column=0, row=0, columnspan= 4, ipadx=80, ipady=30)                    
 # 버튼에 들어갈 배열 선언
 calItem = [['1','2','3','4'],
            ['5','6','7','8'],
-           ['9','10','+','-'],
+           ['9','0','+','-'],
            ['/','*','C','=']]
 # 버튼을 만들어줄 반복문 선언
 # calItem의 인덱스(리스트의 번호)가 i에, 리스트 내용이 item에 들어감
@@ -39,7 +58,10 @@ for i,items in enumerate(calItem):
                        width=10,
                        height=5,
                        bg=color,
-                       fg='white' )
+                       fg='white',
+                       # 간이 함수 생성, cmd에 item 값을 넣고 버튼클릭 함수에 인자를 넣어 실행
+                       command=lambda cmd=item: button_click(cmd))
+
         bt.grid(column=k, row=(i+1))
 
 
