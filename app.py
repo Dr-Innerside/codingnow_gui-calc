@@ -4,13 +4,14 @@ disValue = 0                                                                    
 
 def number_click(value):
     print('숫자',value)
+    global disValue
+    disValue = (disValue*10) + value
+    str_value.set(disValue)
 
 def operator_click(value):
     print('명령', value)
-
-
 def button_click(value):
-    print(value)
+    # print(value)
 
     # 숫자와 오퍼레이터를 나누기 위한
     try:
